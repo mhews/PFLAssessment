@@ -1,0 +1,21 @@
+body {
+  font-family: Verdana, Helvetica, sans-serif;
+  background-color: #DDDDDD;
+}
+table{
+	background-color: #FFFFFF;
+}
+
+#col1{
+	width:50%;
+	float:left;
+}
+#col2{
+	width:50%;
+	float:right;
+	visibility:hidden;
+}
+img{
+	height:200px;
+	width:auto;
+}
