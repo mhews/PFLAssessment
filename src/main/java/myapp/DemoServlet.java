@@ -130,7 +130,7 @@ public class DemoServlet extends HttpServlet {
 
 	
 		  } catch (IOException e) {
-			return "";
+			return order(req);
 
 		  }
 	  
@@ -176,7 +176,7 @@ public class DemoServlet extends HttpServlet {
 
 
 	  } catch (IOException e) {
-		return "";
+		return getProducts();
 
 	  }
 
