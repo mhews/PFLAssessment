@@ -110,8 +110,8 @@ public class DemoServlet extends HttpServlet {
 	        while (data.length() == 0){
 				HttpResponse response = httpClient.execute(postRequest);
 				if (response.getStatusLine().getStatusCode() != 200) {
-					return "";
-					
+					data = "";
+					continue;
 				}
 		
 				BufferedReader br = new BufferedReader(
@@ -156,7 +156,8 @@ public class DemoServlet extends HttpServlet {
 			HttpResponse response = httpClient.execute(getRequest);
 	
 			if (response.getStatusLine().getStatusCode() != 200) {
-				return "";
+				data = "";
+				continue;
 			}
 	
 			BufferedReader br = new BufferedReader(
