@@ -34,7 +34,6 @@ public class DemoServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
-
 		resp.setContentType("text/plain");
 		//get product list or place order, depending on type parameter
 		if (req.getParameter("type") != null){
