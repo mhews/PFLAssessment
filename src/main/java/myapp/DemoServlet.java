@@ -1,18 +1,3 @@
-/*
- * Copyright 2016 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.;
- */
 
 package myapp;
 import java.io.BufferedReader;
@@ -49,7 +34,7 @@ public class DemoServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
-		System.out.println(req.getParameter("type"));
+
 		resp.setContentType("text/plain");
 		//get product list or place order, depending on type parameter
 		if (req.getParameter("type") != null){
@@ -126,7 +111,7 @@ public class DemoServlet extends HttpServlet {
 	        while (data.length() == 0){
 				HttpResponse response = httpClient.execute(postRequest);
 				if (response.getStatusLine().getStatusCode() != 200) {
-					return order(req);
+					return "";
 					
 				}
 		
@@ -142,11 +127,11 @@ public class DemoServlet extends HttpServlet {
 			httpClient.getConnectionManager().shutdown();
 	
 		   }catch (ClientProtocolException e) {
-			return order(req);
+			return "";
 
 	
 		  } catch (IOException e) {
-			return order(req);
+			return "";
 
 		  }
 	  
@@ -172,7 +157,7 @@ public class DemoServlet extends HttpServlet {
 			HttpResponse response = httpClient.execute(getRequest);
 	
 			if (response.getStatusLine().getStatusCode() != 200) {
-				return getProducts();
+				return "";
 			}
 	
 			BufferedReader br = new BufferedReader(
@@ -187,11 +172,11 @@ public class DemoServlet extends HttpServlet {
 		httpClient.getConnectionManager().shutdown();
 		}
 	   catch (ClientProtocolException e) {
-		return getProducts();
+		return "";
 
 
 	  } catch (IOException e) {
-		return getProducts();
+		return "";
 
 	  }
 

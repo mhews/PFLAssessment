@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+  	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <title>PFL Assessment</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  </head>
+  <body>
+
+    <div id="result">Loading...</div>
+    <div class = "row">
+	    <div class = "column" id = "col1">
+	    	<table id= "table" border="2">
+	  		<thead>
+	            <th>Products</th>
+	        </thead>
+	      <tbody>
+	
+	      </tbody>
+	   </table>	
+	   </div>
+	   <div class = "column" id = "col2">
+	   	<div id = "name"></div>
+	   	<div id = "description"></div>
+	   	<img id = "productimg" src="" name=productimg alt = ""/>
+	   	<form id = "input">
+	   	  
+		  <p id = "prompt">Quantity:</p>
+		  <input type="number" id="quantity" min="1" max="5", value = "1">
+		  <div id = "shippingOptions"> </div>
+		  <button id = "order" type = "button">Place Order</button>
+		</form>
+	   	<div id = "orderNumber:">Order Number:</div>
+	   	<div id = "number"></div>
+	   </div>
+	</div>
+	
+	<script>
+	function order(product){
+
+		return function(){
+			document.getElementById("number").innerHTML = ""; //reset order number
+			var delivery;
+			$.each(document.getElementsByName("shipping"), function(i, f){
+					if (f.checked){
+						delivery = f.value; // find selected shipping option
+					}
+				});
+			//create ajax parameters
+			var myJSONObject = {"productID":product.productID, "type":"order","quantity":document.getElementById("quantity").value, "delivery":delivery };
+			$.getJSON('/demo', myJSONObject, function(data){
+				document.getElementById("number").innerHTML = data.results.data.orderNumber; //update order number
+			}).fail(function(){
+			document.getElementById("number").innerHTML = "Order Failed";
+				});
+		};
+	}
+	function update(product){
+		return function(){
+			//set page information to match the selected product
+			document.getElementById("name").innerHTML = product.name;
+          	document.getElementById("description").innerHTML = product.description;	
+          	document.getElementById("productimg").src = product.imageURL;
+          	if (product.quantityMaximum === null){
+          		product.quantityMaximum = "";
+          	}
+          	document.getElementById("prompt").innerHTML = "Quantity (" + product.quantityMinimum + " - " + product.quantityMaximum +"):";
+          	document.getElementById("quantity").min = product.quantityMinimum;
+          	document.getElementById("quantity").max = product.quantityMaximum;
+          	document.getElementById("quantity").value = product.quantityDefault;
+          	document.getElementById("order").onclick = order(product);
+          	document.getElementById("col2").style.visibility = "visible";
+            document.getElementById("shippingOptions").innerHTML = "";
+          	$.each(product.deliveredPrices, function(i, f){
+          		var label = document.createElement("label");
+          		label.innerHTML = "<br />" + f.deliveryMethodCode + " - " + parseFloat(Math.round(f.price * 100) / 100).toFixed(2);
+				var radio = document.createElement("input");
+			    radio.type = "radio";
+			    radio.name = "shipping";
+			    radio.value = f.deliveryMethodCode;
+
+			    label.appendChild(radio);
+          		document.getElementById("shippingOptions").appendChild(label);
+          		radio.checked = true;
+          	});
+		};
+	}	
+
+	</script>
+    <script>
+
+	$(document).ready(function() {
+  	$.getJSON('/demo', {type: "getProducts"}, function(data) {
+  		//parse response to use only the products
+  		var jsonstring = JSON.stringify(data.results.data);
+  		var obj = JSON.parse(jsonstring);
+
+        $.each(obj, function(i, f) {
+          //build table using each product
+		  var row = document.createElement("tr");
+          var tblRow = "<td>" + f.name + "</td>";
+          row.onclick = update(f); //on click passes all product information
+		  $(row).append(tblRow) ;         
+          $(row).appendTo("#table tbody");      
+   		});
+  })
+  .done(function(){
+  	document.getElementById("result").innerHTML = "";
+  	})
+  .fail(function(){
+  	document.getElementById("result").innerHTML = "Product List Failed to Load. Please Reload Page";
+  	});
+});
+
+    </script>
+  </body>
+</html>
